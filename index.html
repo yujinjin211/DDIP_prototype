@@ -43,13 +43,28 @@
                             <button onClick={() => { setCurrentGroup({ name: document.getElementById('grpName').value }); setView('dashboard'); }} className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold">생성하기</button>
                         </div>
                     )}
-                    {view === 'dashboard' && (
-                        <div className="p-6">
-                            <h1 className="text-2xl font-bold text-blue-600 mb-4">{currentGroup?.name}</h1>
-                            <p className="text-gray-600">준비 중인 페이지입니다.</p>
-                            <button onClick={() => setView('landing')} className="mt-4 text-blue-500 underline">처음으로</button>
-                        </div>
-                    )}
+                    // App 컴포넌트의 렌더링 부분을 아래처럼 수정하세요
+{view === 'create' && (
+    <div className="p-6">
+        <button onClick={() => setView('landing')} className="mb-4"><ArrowLeftIcon /></button>
+        <h2 className="text-xl font-bold mb-6">그룹 이름을 입력하세요</h2>
+        <input className="w-full p-4 border rounded-xl mb-4" placeholder="예: 우리집 벼룩시장" id="grpName" />
+        <button 
+            onClick={() => { 
+                const name = document.getElementById('grpName').value;
+                if(name) {
+                    setCurrentGroup({ name: name }); 
+                    setView('dashboard');
+                } else {
+                    alert('그룹 이름을 입력해주세요!');
+                }
+            }} 
+            className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold"
+        >
+            생성하기
+        </button>
+    </div>
+)}
                 </div>
             );
         }
