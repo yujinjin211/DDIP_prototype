@@ -4,33 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>띱(DDIP)</title>
-    <!-- Tailwind CSS 및 React CDN 설정 -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- React & Babel -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide-react"></script>
 </head>
 <body class="bg-gray-50">
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { Plus, Heart, ArrowLeft, Camera, Image: ImageIcon, X, Share2, Loader2 } = lucide;
+        const { useState } = React;
+
+        // 아이콘 (SVG 직접 구현)
+        const ArrowLeftIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>;
+        const PlusIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
 
         function App() {
             const [view, setView] = useState('landing');
+            const [currentGroup, setCurrentGroup] = useState(null);
+
             return (
-                <div className="max-w-md mx-auto min-h-screen bg-gray-50 p-6 flex flex-col items-center justify-center">
-                    <h1 className="text-4xl font-extrabold text-blue-600 mb-4">띱(DDIP)</h1>
-                    <p className="text-gray-600">지금 바로 로컬에서 시작하는 벼룩시장!</p>
-                    <div className="mt-8 p-4 bg-white rounded-xl shadow w-full text-center">
-                        현재 페이지는 정적 HTML 모드입니다.
-                    </div>
+                <div className="max-w-md mx-auto min-h-screen bg-gray-50">
+                    {view === 'landing' && (
+                        <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center">
+                            <h1 className="text-5xl font-extrabold text-blue-600 mb-2">띱(DDIP)</h1>
+                            <p className="text-gray-500 mb-8">우리들만의 세컨핸드 벼룩시장</p>
+                            <button onClick={() => setView('create')} className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold mb-4">그룹 만들기</button>
+                            <button onClick={() => setView('join')} className="w-full bg-white border border-blue-600 text-blue-600 py-4 rounded-xl font-bold">초대 코드로 입장</button>
+                        </div>
+                    )}
+                    {view === 'create' && (
+                        <div className="p-6">
+                            <button onClick={() => setView('landing')} className="mb-4"><ArrowLeftIcon /></button>
+                            <h2 className="text-xl font-bold mb-6">그룹 이름을 입력하세요</h2>
+                            <input className="w-full p-4 border rounded-xl mb-4" placeholder="예: 우리집 벼룩시장" id="grpName" />
+                            <button onClick={() => { setCurrentGroup({ name: document.getElementById('grpName').value }); setView('dashboard'); }} className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold">생성하기</button>
+                        </div>
+                    )}
+                    {view === 'dashboard' && (
+                        <div className="p-6">
+                            <h1 className="text-2xl font-bold text-blue-600 mb-4">{currentGroup?.name}</h1>
+                            <p className="text-gray-600">준비 중인 페이지입니다.</p>
+                            <button onClick={() => setView('landing')} className="mt-4 text-blue-500 underline">처음으로</button>
+                        </div>
+                    )}
                 </div>
             );
         }
-
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
